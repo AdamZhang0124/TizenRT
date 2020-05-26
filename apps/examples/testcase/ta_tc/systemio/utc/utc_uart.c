@@ -132,21 +132,21 @@ static void utc_systemio_uart_set_flowcontrol_n(void)
 
 static void utc_systemio_uart_write_p(void)
 {
-	char tbuf[32] = "UART READ/WRITE LoopBack TEST!";
+	char tbuf[15] = "0123456789";
 	TC_ASSERT_GT("iotbus_uart_write", iotbus_uart_write(uart, tbuf, sizeof(tbuf)), 0);
 	TC_SUCCESS_RESULT();
 }
 
 static void utc_systemio_uart_write_n(void)
 {
-	char tbuf[32] = "UART READ/WRITE LoopBack TEST!";
+	char tbuf[15] = "0123456789";
 	TC_ASSERT_EQ("iotbus_uart_write", iotbus_uart_write(uart, NULL, sizeof(tbuf)), IOTBUS_ERROR_INVALID_PARAMETER);
 	TC_SUCCESS_RESULT();
 }
 
 static void utc_systemio_uart_read_p(void)
 {
-	char rbuf[32];
+	char rbuf[15];
 	TC_ASSERT_GT("iotbus_uart_read", iotbus_uart_read(uart, rbuf, sizeof(rbuf)), 0);
 	TC_SUCCESS_RESULT();
 }

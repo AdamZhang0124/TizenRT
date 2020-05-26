@@ -30,12 +30,8 @@
 #include <string.h>
 
 #define MICROSECOND 1000000
-#define BUF_LEN 32
-#ifdef CONFIG_ARCH_CHIP_STM32
+#define BUF_LEN 15
 #define DEVPATH "/dev/ttyS1"
-#else                            // artik
-#define DEVPATH "/dev/ttyS2"
-#endif
 
 /**
 * @testcase         itc_systemio_iotbus_uart_init_stop_p
@@ -270,7 +266,7 @@ void itc_systemio_iotbus_uart_set_flowcontrol_p(void)
 void itc_systemio_iotbus_uart_write_read_p(void)
 {
 	int ret = IOTBUS_ERROR_NONE;
-	char sz_input_text[BUF_LEN] = "UART READ/WRITE ITC TESTING!";
+	char sz_input_text[BUF_LEN] = "0123456789";
 	char sz_output_text[BUF_LEN];
 	iotbus_uart_context_h h_uart = iotbus_uart_init(DEVPATH);
 	TC_ASSERT_NEQ("iotbus_uart_init", h_uart, NULL);
@@ -325,7 +321,7 @@ void itc_systemio_iotbus_uart_flush_p(void)
 static void itc_systemio_iotbus_uart_write_read_flush_p(void)
 {
 	int ret = IOTBUS_ERROR_NONE;
-	char sz_input_text[BUF_LEN] = "UART READ/WRITE ITC TESTING!";
+	char sz_input_text[BUF_LEN] = "0123456789";
 	char sz_output_text[BUF_LEN];
 
 	iotbus_uart_context_h h_uart = iotbus_uart_init(DEVPATH);
@@ -360,8 +356,8 @@ static void itc_systemio_iotbus_uart_write_read_flush_p(void)
 static void itc_systemio_iotbus_uart_write_read_flush_p_multi_handle(void)
 {
 	int ret = IOTBUS_ERROR_NONE;
-	char sz_input_text1[BUF_LEN] = "UART READ/WRITE ITC TESTING!";
-	char sz_input_text2[BUF_LEN] = "UART READ/WRITE ITC TESTING1!";
+	char sz_input_text1[BUF_LEN] = "0123456789";
+	char sz_input_text2[BUF_LEN] = "01234567891";
 	char sz_output_text[BUF_LEN];
 
 	iotbus_uart_context_h h_uart1 = iotbus_uart_init(DEVPATH);
@@ -453,7 +449,7 @@ static void itc_systemio_iotbus_uart_set_flow_write_read_p(void)
 {
 	int i_size = 4;
 	int ret = IOTBUS_ERROR_NONE;
-	char sz_input_text[BUF_LEN] = "UART READ/WRITE ITC TESTING!";
+	char sz_input_text[BUF_LEN] = "0123456789";
 	char sz_output_text[BUF_LEN];
 	int rtscts[4][2] = { {1, 0}, {0, 1}, {1, 1}, {0, 0} };
 	int index = 0;
@@ -509,7 +505,7 @@ static void itc_systemio_iotbus_uart_set_flow_flush_write_read_p(void)
 {
 	int i_size = 4;
 	int ret = IOTBUS_ERROR_NONE;
-	char sz_input_text[BUF_LEN] = "UART READ/WRITE ITC TESTING!";
+	char sz_input_text[BUF_LEN] = "0123456789";
 	char sz_output_text[BUF_LEN];
 	int rtscts[4][2] = { {1, 0}, {0, 1}, {1, 1}, {0, 0} };
 	int index = 0;
@@ -576,7 +572,7 @@ static void itc_systemio_iotbus_uart_set_mode_write_read_p(void)
 	int i_bytesize = 8;
 	int i_stop_bits = 1;
 	int ret = IOTBUS_ERROR_NONE;
-	char sz_input_text[BUF_LEN] = "UART READ/WRITE ITC TESTING!";
+	char sz_input_text[BUF_LEN] = "0123456789";
 	char sz_output_text[BUF_LEN];
 	int mode[] = { IOTBUS_UART_PARITY_NONE, IOTBUS_UART_PARITY_EVEN, IOTBUS_UART_PARITY_ODD };
 	char *mode_str[3] = { "IOTBUS_UART_PARITY_NONE", "IOTBUS_UART_PARITY_EVEN", "IOTBUS_UART_PARITY_ODD" };
@@ -636,7 +632,7 @@ static void itc_systemio_iotbus_uart_set_mode_flush_write_read_p(void)
 	int i_bytesize = 8;
 	int i_stop_bits = 1;
 	int ret = IOTBUS_ERROR_NONE;
-	char sz_input_text[BUF_LEN] = "UART READ/WRITE ITC TESTING!";
+	char sz_input_text[BUF_LEN] = "0123456789";
 	char sz_output_text[BUF_LEN];
 	int mode[] = { IOTBUS_UART_PARITY_NONE, IOTBUS_UART_PARITY_EVEN, IOTBUS_UART_PARITY_ODD };
 	char *mode_str[3] = { "IOTBUS_UART_PARITY_NONE", "IOTBUS_UART_PARITY_EVEN", "IOTBUS_UART_PARITY_ODD" };
@@ -706,7 +702,7 @@ static void itc_systemio_iotbus_uart_set_flow_mode_flush_write_read_p(void)
 	int i_flow_size = 4;
 	int i_stop_bits = 1;
 	int ret = IOTBUS_ERROR_NONE;
-	char sz_input_text[BUF_LEN] = "UART READ/WRITE ITC TESTING!";
+	char sz_input_text[BUF_LEN] = "0123456789";
 	char sz_output_text[BUF_LEN];
 	int mode[] = { IOTBUS_UART_PARITY_NONE, IOTBUS_UART_PARITY_EVEN, IOTBUS_UART_PARITY_ODD };
 	char *mode_str[3] = { "IOTBUS_UART_PARITY_NONE", "IOTBUS_UART_PARITY_EVEN", "IOTBUS_UART_PARITY_ODD" };

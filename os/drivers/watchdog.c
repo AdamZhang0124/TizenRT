@@ -269,7 +269,7 @@ static int wdog_ioctl(FAR struct file *filep, int cmd, unsigned long arg)
 	FAR struct watchdog_upperhalf_s *upper = inode->i_private;
 	FAR struct watchdog_lowerhalf_s *lower = upper->lower;
 	int ret;
-
+printf("Enter wdog_ioctl, cmd=%d\n",cmd);
 	wdvdbg("cmd: %d arg: %ld\n", cmd, arg);
 	DEBUGASSERT(upper && lower);
 
@@ -360,6 +360,7 @@ static int wdog_ioctl(FAR struct file *filep, int cmd, unsigned long arg)
 		 * provider timeout handler.  NOTE:  Providing handler==NULL will
 		 * restore the reset behavior.
 		 */
+			printf("Enter WDIOC_CAPTURE\n");
 
 		if (lower->ops->capture) {	/* Optional */
 			capture = (FAR struct watchdog_capture_s *)((uintptr_t)arg);

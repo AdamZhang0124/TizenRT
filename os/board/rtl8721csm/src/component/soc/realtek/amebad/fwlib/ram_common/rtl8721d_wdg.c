@@ -70,13 +70,20 @@ void WDG_Init(WDG_InitTypeDef *WDG_InitStruct)
 	WDG_TypeDef* WDG = ((WDG_TypeDef *) WDG_REG_BASE);
 	u32 wdg_reg = 0;
 	u32 temp = 0;
-
+	printf("WDG_InitStruct->DivFacProcess= %X\n",WDG_InitStruct->DivFacProcess);
 	wdg_reg = WDG_InitStruct->DivFacProcess & 0xFFFF; /* WdgScalar */
+	printf("wdg_reg= %X\n",wdg_reg);
 	wdg_reg &= ~(0x00FF0000); /* WdgEnByte */
+	printf("wdg_reg= %X\n",wdg_reg);
 	wdg_reg |= (WDG_InitStruct->CountProcess & 0xF) << 25;
+	printf("WDG_InitStruct->CountProcess= %X\n",WDG_InitStruct->CountProcess);
+	printf("wdg_reg= %X\n",wdg_reg);
 	wdg_reg |= WDG_BIT_CLEAR;
+	printf("wdg_reg= %X\n",wdg_reg);
 	wdg_reg |= WDG_BIT_RST_MODE; /* RESET_MODE */
+	printf("wdg_reg= %X\n",wdg_reg);
 	wdg_reg |= WDG_BIT_ISR_CLEAR; /*Clear ISR*/
+	printf("wdg_reg= %X\n",wdg_reg);
 
 	WDG->VENDOR = wdg_reg;
 

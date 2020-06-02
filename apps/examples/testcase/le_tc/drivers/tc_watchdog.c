@@ -48,13 +48,13 @@ static void tc_driver_watchdog_open_close(void)
 {
 	int fd = 0;
 	int ret = 0;
-
+printf("OC 1\n");
 	fd = open("/dev/watchdog0", O_RDWR);
 	TC_ASSERT_GT("watchdog_open", fd, 0);
-
+printf("OC 2\n");
 	ret = close(fd);
 	TC_ASSERT_EQ("watchdog_close", ret, OK);
-
+printf("OC 3\n");
 	/* Negative test cases */
 	int count = 0;
 	int fds[255] = { 0, };
@@ -65,9 +65,9 @@ static void tc_driver_watchdog_open_close(void)
 			break;
 		}
 	}
-
+printf("OC 4\n");
 	close_fds(fds, --count);
-
+printf("OC 5\n");
 	TC_SUCCESS_RESULT();
 }
 
@@ -84,18 +84,18 @@ static void tc_driver_watchdog_read_write(void)
 {
 	int fd = 0;
 	int ret = 0;
-
+printf("WR 1\n");
 	fd = open("/dev/watchdog0", O_RDWR);
 	TC_ASSERT_GT("watchdog_open", fd, 0);
-
+printf("WR 2\n");
 	ret = read(fd, NULL, 0);
 	TC_ASSERT_EQ_CLEANUP("watchdog_read", ret, 0, close(fd));
-
+printf("WR 3\n");
 	ret = write(fd, NULL, 1);
 	TC_ASSERT_EQ_CLEANUP("watchdog_write", ret, 0, close(fd));
-
+printf("WR 4\n");
 	close(fd);
-
+printf("WR 5\n");
 	TC_SUCCESS_RESULT();
 }
 
@@ -112,56 +112,111 @@ static void tc_driver_watchdog_ioctl(void)
 {
 	int fd = 0;
 	int ret = 0;
-
+printf("iotcl 1\n");
 	fd = open("/dev/watchdog0", O_RDWR);
 	TC_ASSERT_GT("watchdog_open", fd, 0);
-
+printf("iotcl 2\n");
 	ret = ioctl(fd, WDIOC_SETTIMEOUT, 1000);
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
-
+printf("iotcl 3 WDIOC_START=%d\n",WDIOC_START);
 	ret = ioctl(fd, WDIOC_START, 0);
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
-
+printf("iotcl 4 WDIOC_GETSTATUS=%d\n",WDIOC_GETSTATUS);
 	FAR struct watchdog_status_s status;
 	ret = ioctl(fd, WDIOC_GETSTATUS, (unsigned long)&status);
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", status.flags & WDFLAGS_ACTIVE, WDFLAGS_ACTIVE, close(fd));
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", status.timeout, 1000, close(fd));
-
+printf("iotcl 5 WDIOC_GETSTATUS=%d\n",WDIOC_GETSTATUS);
 	/* Negative testcase for WDIOC_GETSTATUS */
 	ret = ioctl(fd, WDIOC_GETSTATUS, 0UL);
 	TC_ASSERT_LT_CLEANUP("watchdog_ioctl", ret, 0, close(fd));
-
+printf("iotcl 6 WDIOC_CAPTURE\n");
 	FAR struct watchdog_capture_s cap;
 	ret = ioctl(fd, WDIOC_CAPTURE, (unsigned long)&cap);
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
-
+printf("iotcl 7 WDIOC_CAPTURE\n");
 	/* Negative testcase for WDIOC_CAPTURE */
 	ret = ioctl(fd, WDIOC_CAPTURE, 0UL);
 	TC_ASSERT_LT_CLEANUP("watchdog_ioctl", ret, 0, close(fd));
-
+printf("iotcl 8 WDIOC_KEEPALIVE\n");
 	ret = ioctl(fd, WDIOC_KEEPALIVE, 0UL);
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
-
+printf("iotcl 9 WDIOC_STOP\n");
 	ret = ioctl(fd, WDIOC_STOP, 0UL);
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
-
+printf("iotcl 10 -1\n");
 	ret = ioctl(fd, -1, 0UL);
 	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
-
+printf("iotcl 11\n");
 	close(fd);
+printf("iotcl 12\n");
+	TC_SUCCESS_RESULT();
+}
+
+xcpt_t  test_handler(int irq, FAR void *context, FAR void *arg)
+{
+	printf("Enter test_handler!!!!!!!!!!!!!!!!!!!!\n");
+	return OK;
+}
+
+static void tc_amebad_watchdog(void)
+{
+printf("tc_amebad_watchdog\n");
+	int fd = 0;
+	int ret = 0;
+printf("iotcl 1 open\n");
+	fd = open("/dev/watchdog0", O_RDWR);
+	TC_ASSERT_GT("watchdog_open", fd, 0);
+#if 0
+printf("iotcl 2\n");
+	ret = ioctl(fd, WDIOC_SETTIMEOUT, 15000);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+printf("iotcl 3 WDIOC_START=%d\n",WDIOC_START);
+	ret = ioctl(fd, WDIOC_START, 0);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+printf("iotcl 4 WDIOC_GETSTATUS=%d\n",WDIOC_GETSTATUS);
+	FAR struct watchdog_status_s status;
+	ret = ioctl(fd, WDIOC_GETSTATUS, (unsigned long)&status);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+wait_ms(1000);
+	ret = ioctl(fd, WDIOC_GETSTATUS, (unsigned long)&status);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+wait_ms(1000);
+	ret = ioctl(fd, WDIOC_GETSTATUS, (unsigned long)&status);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+wait_ms(1000);
+	ret = ioctl(fd, WDIOC_GETSTATUS, (unsigned long)&status);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+wait_ms(1000);
+	ret = ioctl(fd, WDIOC_GETSTATUS, (unsigned long)&status);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+#endif
+	printf("WDIOC_CAPTURE\n");
+	FAR struct watchdog_capture_s *capture;
+//printf("--------------newhandler = %d ; oldhandler = %d\n",(int)capture->newhandler, (int)capture->oldhandler);
+	capture->newhandler = test_handler(1, NULL, NULL); //------set test handler
+	printf("Aft test_handler\n");
+	ret = ioctl(fd, WDIOC_CAPTURE, (unsigned long)capture);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+
+	printf("WDIOC_START=%d\n",WDIOC_START);
+	ret = ioctl(fd, WDIOC_START, 0);
+	TC_ASSERT_EQ_CLEANUP("watchdog_ioctl", ret, OK, close(fd));
+		
 
 	TC_SUCCESS_RESULT();
 }
+
 
 /****************************************************************************
  * Name: watchdog driver test
  ****************************************************************************/
 void watchdog_main(void)
 {
-	tc_driver_watchdog_open_close();
-	tc_driver_watchdog_read_write();
-	tc_driver_watchdog_ioctl();
-
+//	tc_driver_watchdog_open_close();
+//	tc_driver_watchdog_read_write();
+//	tc_driver_watchdog_ioctl();
+	tc_amebad_watchdog();
 	return;
 }

@@ -65,6 +65,7 @@
 #include <tinyara/board.h>
 #include <arch/board/board.h>
 #include "gpio_api.h"
+#include "timer_api.h"
 
 /************************************************************************************
  * Pre-processor Definitions
@@ -78,6 +79,10 @@ extern FAR struct gpio_lowerhalf_s *amebad_gpio_lowerhalf(u32 pinname, u32 pinmo
 /************************************************************************************
  * Public Functions
  ************************************************************************************/
+
+void board_wdg_initialize(void)
+{
+}
 
 void board_gpio_initialize(void)
 {
@@ -209,6 +214,19 @@ void board_initialize(void)
 {
 	configure_partitions();
 	amebad_mount_partions();
+#ifdef CONFIG_WATCHDOG
+	uint32_t timeout_ms = 5000;
+	amebad_wdg_initialize(CONFIG_WATCHDOG_DEVPATH, timeout_ms);
+	printf("amebad_wdg_initialize done\n");
+#endif
+#ifdef CONFIG_TIMER
+	int  i;
+	char path[CONFIG_PATH_MAX];
+	for (i = 0; i < GTIMER_MAX; i++) {
+		snprintf(path, sizeof(path), "/dev/timer%d", i);
+		amebad_timer_initialize(path, i);
+	}
+#endif
 	board_gpio_initialize();
 }
 #endif

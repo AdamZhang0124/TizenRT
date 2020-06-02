@@ -386,8 +386,12 @@ CONFIG_GPIO=y
 # CONFIG_LCD is not set
 # CONFIG_BCH is not set
 # CONFIG_RTC is not set
-# CONFIG_WATCHDOG is not set
-# CONFIG_TIMER is not set
+##################################################### watchdog
+CONFIG_WATCHDOG=y
+CONFIG_WATCHDOG_DEVPATH="/dev/watchdog0"
+#CONFIG_WATCHDOG_FOR_IRQ is not set
+##################################################### watchdog
+#CONFIG_TIMER=y
 # CONFIG_ANALOG is not set
 # CONFIG_KERNEL_TEST_DRV is not set
 # CONFIG_NETDEVICES is not set
@@ -1117,6 +1121,12 @@ CONFIG_EXAMPLES_MBEDTLS_SELF_TEST=y
 # CONFIG_EXAMPLES_ST_THINGS is not set
 # CONFIG_EXAMPLES_SYSCALL_PERFORMANCE is not set
 CONFIG_EXAMPLES_TESTCASE=y
+
+##Test Drivers
+CONFIG_EXAMPLES_TESTCASE_DRIVERS=y
+CONFIG_TC_DRV_ALL=y
+CONFIG_TC_DRIVERS_WATCHDOG=y
+
 ##Example Kernel Test
 #CONFIG_EXAMPLES_TESTCASE_KERNEL=y
 #CONFIG_TC_KN_ALL=y
